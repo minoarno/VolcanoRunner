@@ -51,8 +51,6 @@ public class MatchMaker : MonoBehaviour
 
         await Login();
 
-        //CreateLobby();
-
         CheckForLobbies();
 
     }
@@ -187,6 +185,8 @@ public class MatchMaker : MonoBehaviour
         try
         {
             StopAllCoroutines();
+            Lobbies.Instance.RemovePlayerAsync(id, PlayerId);
+            Debug.LogFormat($"Logged out player from lobby: {id}, with playerId{PlayerId}");
         }
         catch
         {
