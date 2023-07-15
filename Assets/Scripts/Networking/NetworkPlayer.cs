@@ -60,7 +60,7 @@ public class NetworkPlayer : MonoBehaviour
         if (!Input.GetMouseButton(0))
             return false;
 
-        Ray ray = _mainCam.ScreenPointToRay(Input.mousePosition);
+        Ray ray = _mainCam.ScreenPointToRay( Input.mousePosition);
             //new Ray(_mainCam.transform.position, mousePos - _mainCam.transform.position);
 
         Debug.DrawRay(ray.origin, ray.direction * 100f, _color);
