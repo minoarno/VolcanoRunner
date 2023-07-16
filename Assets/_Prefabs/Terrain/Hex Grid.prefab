@@ -146,7 +146,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10302, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 89bd8d4312e719b4dbf559e1acd446b9, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -212,7 +212,7 @@ Transform:
   - {fileID: 7699011181149422540}
   - {fileID: 8031968056078718392}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &8715390085923231624
 MonoBehaviour:
@@ -228,5 +228,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 50
   height: 50
+  defaultColor: {r: 1, g: 1, b: 1, a: 1}
+  touchedColor: {r: 1, g: 0, b: 1, a: 1}
   cellPrefab: {fileID: 5084800924750604356, guid: 5c74f29f46d88ca429a42e5f13d3d4aa, type: 3}
   cellLabelPrefab: {fileID: 1895567295973559224, guid: 93142720d2772ef4c927f0df50b7d341, type: 3}
