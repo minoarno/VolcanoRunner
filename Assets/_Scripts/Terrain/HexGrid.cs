@@ -61,27 +61,13 @@ namespace _Scripts.Terrain
                 new Vector2(position.x, position.z);
             label.text = cell.coordinates.ToStringOnSeparateLines();
         }
-        
-        void Update () {
-            if (Input.GetMouseButton(0)) {
-                HandleInput();
-            }
-        }
 
-        void HandleInput () {
-            Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(inputRay, out hit, Single.MaxValue)) {
-                TouchCell(hit.point);
-            }
-        }
-	
-        void TouchCell (Vector3 position) {
+        public void ColorCell (Vector3 position, Color color) {
             position = transform.InverseTransformPoint(position);
             HexCoordinates coordinates = HexCoordinates.FromPosition(position);
             int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
             HexCell cell = _cells[index];
-            cell.color = touchedColor;
+            cell.color = color;
             _hexMesh.Triangulate(_cells);
         }
     }
