@@ -369,8 +369,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1337492419}
-  m_LocalRotation: {x: -0.42817542, y: -0.0097657945, z: 0.004626234, w: -0.90363103}
-  m_LocalPosition: {x: 398.10208, y: 413.9566, z: -138.45447}
+  m_LocalRotation: {x: -0.49142686, y: -0.004974866, z: 0.0038687002, w: -0.8708961}
+  m_LocalPosition: {x: 145.01448, y: 216.24455, z: -32.12326}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -2143,8 +2143,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 528ebe0400ed6a14b964286949a35ceb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 50
-  height: 50
+  width: 20
+  height: 20
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   touchedColor: {r: 1, g: 0, b: 1, a: 1}
   cellPrefab: {fileID: 5084800924750604356, guid: 5c74f29f46d88ca429a42e5f13d3d4aa, type: 3}

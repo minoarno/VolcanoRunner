@@ -1,4 +1,5 @@
 using System;
+using _Scripts.Core;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -54,6 +55,31 @@ namespace _Scripts.Terrain
             cell.transform.localPosition = position;
             cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
             cell.color = defaultColor;
+
+            if (x > 0)
+            {
+                cell.SetNeighbor(HexDirection.West, _cells[i - 1]);
+            }
+            if (z > 0)
+            {
+                if ((z & 1) == 0) 
+                {
+                    cell.SetNeighbor(HexDirection.SouthEast, _cells[i - width]);
+                    if (x > 0) 
+                    {
+                        cell.SetNeighbor(HexDirection.SouthWest, _cells[i - width - 1]);
+                    }
+                }
+                else 
+                {
+                    cell.SetNeighbor(HexDirection.SouthWest, _cells[i - width]);
+                    if (x < width - 1) 
+                    {
+                        cell.SetNeighbor(HexDirection.SouthEast, _cells[i - width + 1]);
+                    }
+                }
+            }
+            
             
             Text label = Instantiate(cellLabelPrefab);
             label.rectTransform.SetParent(_gridCanvas.transform, false);
