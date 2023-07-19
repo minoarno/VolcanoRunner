@@ -80,12 +80,12 @@ namespace _Scripts.Terrain
                 }
             }
             
-            
             Text label = Instantiate(cellLabelPrefab);
             label.rectTransform.SetParent(_gridCanvas.transform, false);
-            label.rectTransform.anchoredPosition =
-                new Vector2(position.x, position.z);
+            label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
             label.text = cell.coordinates.ToStringOnSeparateLines();
+            
+            cell.uiRect = label.rectTransform;
         }
 
         public void ColorCell (Vector3 position, Color color) {
@@ -94,6 +94,19 @@ namespace _Scripts.Terrain
             int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
             HexCell cell = _cells[index];
             cell.color = color;
+            _hexMesh.Triangulate(_cells);
+        }
+        
+        public HexCell GetCell (Vector3 position) 
+        {
+            position = transform.InverseTransformPoint(position);
+            HexCoordinates coordinates = HexCoordinates.FromPosition(position);
+            int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
+            return _cells[index];
+        }
+        
+        public void Refresh () 
+        {
             _hexMesh.Triangulate(_cells);
         }
     }

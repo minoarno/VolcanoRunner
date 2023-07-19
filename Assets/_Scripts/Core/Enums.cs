@@ -27,4 +27,9 @@ namespace _Scripts.Core
             return direction == HexDirection.NorthWest ? HexDirection.NorthEast : (direction + 1);
         }
     }
+    
+    public enum HexEdgeType 
+    {
+        Flat, Slope, Cliff
+    }
 }
