@@ -15,7 +15,8 @@ namespace _Scripts.Terrain
             );
 
         private Color _activeColor;
-
+        private int _activeElevation;
+        
         void Awake () {
             SelectColor(0);
         }
@@ -27,18 +28,31 @@ namespace _Scripts.Terrain
             }
         }
 
-        void HandleInput () {
+        void HandleInput () 
+        {
             Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(inputRay, out hit)) 
             {
-                hexGrid.Value.ColorCellServerRpc(hit.point, _activeColor);
+                EditCell(hexGrid.Value.GetCell(hit.point));
             }
         }
 
+        void EditCell (HexCell cell) 
+        {
+            cell.color = _activeColor;
+            cell.Elevation = _activeElevation;
+            hexGrid.Value.Refresh();
+        }
+        
         public void SelectColor (int index) 
         {
             _activeColor = colorCollection.colors[index];
+        }
+        
+        public void SetElevation (float elevation) 
+        {
+            _activeElevation = (int)elevation;
         }
     }
 }
