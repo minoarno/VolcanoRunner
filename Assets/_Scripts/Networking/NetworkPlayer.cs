@@ -55,8 +55,6 @@ public class NetworkPlayer : NetworkBehaviour
     {
         if (IsLocalPlayer)
         {
-            Debug.Log($"Player {PlayerId}s chosen color was {_chosenColor.Value}");
-
             if (CheckRaycast()) _currentColor.Value = _chosenColor.Value;
             else _currentColor.Value = Color.white;
         }
@@ -73,17 +71,12 @@ public class NetworkPlayer : NetworkBehaviour
     {
         if (_renderer != null)
         {
-            Debug.Log($"Player {PlayerId}s current color was {_currentColor.Value}");
             _renderer.material.color = _currentColor.Value;
         }
-        else
-            Debug.Log($"Player {PlayerId}s renderer was null");
     }
 
     private bool CheckRaycast()
     {
-
-
         if (!Input.GetMouseButton(0))
             return false;
 

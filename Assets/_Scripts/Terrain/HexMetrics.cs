@@ -1,4 +1,6 @@
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace _Scripts.Terrain
 {
@@ -19,7 +21,7 @@ namespace _Scripts.Terrain
     }
     
     [System.Serializable]
-    public struct HexCoordinates 
+    public struct HexCoordinates : INetworkSerializable
     {
         [SerializeField]
         private int x, z;
@@ -28,6 +30,14 @@ namespace _Scripts.Terrain
         public int Z => z;
 
         public int Y => -X - Z;
+
+
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref x);
+            serializer.SerializeValue(ref z);
+        }
 
         public HexCoordinates (int x, int z) 
         {

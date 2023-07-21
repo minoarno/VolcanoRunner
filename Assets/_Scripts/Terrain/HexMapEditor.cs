@@ -1,13 +1,18 @@
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace _Scripts.Terrain
 {
-    public class HexMapEditor : MonoBehaviour
+    public class HexMapEditor : NetworkBehaviour
     {
         public TerrainColorCollection colorCollection;
 
-        public HexGrid hexGrid;
+        public NetworkVariable<HexGrid> hexGrid = new NetworkVariable<HexGrid>(
+            default,
+            NetworkVariableReadPermission.Everyone,
+            NetworkVariableWritePermission.Owner
+            );
 
         private Color _activeColor;
 
@@ -25,8 +30,9 @@ namespace _Scripts.Terrain
         void HandleInput () {
             Ray inputRay = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
-            if (Physics.Raycast(inputRay, out hit)) {
-                hexGrid.ColorCell(hit.point, _activeColor);
+            if (Physics.Raycast(inputRay, out hit)) 
+            {
+                hexGrid.Value.ColorCellServerRpc(hit.point, _activeColor);
             }
         }
 
