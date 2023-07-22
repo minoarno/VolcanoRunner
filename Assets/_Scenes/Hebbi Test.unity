@@ -1254,6 +1254,10 @@ PrefabInstance:
       propertyPath: m_ReflectionProbeUsage
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: bb2c7ba9bd5268447abb8775aaffd73b, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
+      objectReference: {fileID: 2100000, guid: 7220354d06bab0d4abef324734b4ed85, type: 2}
     - target: {fileID: 919132149155446097, guid: bb2c7ba9bd5268447abb8775aaffd73b, type: 3}
       propertyPath: m_Name
       value: WesternHouseE (1)
