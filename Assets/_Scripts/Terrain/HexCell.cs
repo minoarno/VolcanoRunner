@@ -1,9 +1,11 @@
 using _Scripts.Core;
+using Unity.Netcode;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 namespace _Scripts.Terrain
 {
-    public class HexCell : MonoBehaviour
+    public class HexCell : MonoBehaviour, INetworkSerializable
     {
         public HexCoordinates coordinates;
         public RectTransform uiRect;
@@ -28,7 +30,16 @@ namespace _Scripts.Terrain
         public Color color;
 
         [SerializeField] private HexCell[] neighbors;
-        
+
+
+        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        {
+            serializer.SerializeValue(ref neighbors);
+            serializer.SerializeValue(ref _elevation);
+            serializer.SerializeValue(ref color);
+            serializer.SerializeValue(ref coordinates);
+        }
+
         public HexCell GetNeighbor (HexDirection direction) 
         {
             return neighbors[(int)direction];

@@ -1,11 +1,12 @@
 using System;
 using _Scripts.Core;
+using Unity.Netcode;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace _Scripts.Terrain
 {
-    public class HexGrid : MonoBehaviour
+    public class HexGrid : NetworkBehaviour
     {
         public int width = 6;
         public int height = 6;
