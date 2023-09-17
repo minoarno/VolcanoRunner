@@ -1,11 +1,12 @@
 using System.Collections.Generic;
 using _Scripts.Core;
+using Unity.Netcode;
 using UnityEngine;
 
 namespace _Scripts.Terrain
 {
     [RequireComponent(typeof(MeshFilter), typeof(MeshRenderer))]
-    public class HexMesh : MonoBehaviour {
+    public class HexMesh : NetworkBehaviour {
         private Mesh _hexMesh;
         private List<Vector3> _vertices;
         private List<int> _triangles;
@@ -25,7 +26,7 @@ namespace _Scripts.Terrain
             _triangles = new List<int>();
         }
 
-        public void Triangulate (HexCell[] cells) 
+        public void Triangulate (NetworkVariable<HexCell>[] cells) 
         {
             _hexMesh.Clear();
             _vertices.Clear();
@@ -34,7 +35,7 @@ namespace _Scripts.Terrain
             
             foreach (var cell in cells)
             {
-                Triangulate(cell);
+                Triangulate(cell.Value);
             }
             _hexMesh.vertices = _vertices.ToArray();
             _hexMesh.colors = _colors.ToArray();

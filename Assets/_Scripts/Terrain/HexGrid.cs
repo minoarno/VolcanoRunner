@@ -16,31 +16,31 @@ namespace _Scripts.Terrain
         
         public HexCell cellPrefab;
     
-        HexCell[] _cells;
+        NetworkVariable<HexCell>[] _cells;
         
-        public Text cellLabelPrefab;
-
-        Canvas _gridCanvas;
+        //public Text cellLabelPrefab;
+//
+        //Canvas _gridCanvas;
         HexMesh _hexMesh;
-        
-        void Awake () 
+
+
+        public override void OnNetworkSpawn()
         {
-            _gridCanvas = GetComponentInChildren<Canvas>();
+            //_gridCanvas = GetComponentInChildren<Canvas>();
             _hexMesh = GetComponentInChildren<HexMesh>();
 
-            _cells = new HexCell[height * width];
-
-            for (int z = 0, i = 0; z < height; z++) 
+            if (IsHost)
             {
-                for (int x = 0; x < width; x++) 
+                _cells = new NetworkVariable<HexCell>[height * width];
+                for (int z = 0, i = 0; z < height; z++) 
                 {
-                    CreateCell(x, z, i++);
+                    for (int x = 0; x < width; x++) 
+                    {
+                        CreateCell(x, z, i++);
+                    }
                 }
             }
-        }
-	
-        void Start () 
-        {
+            
             _hexMesh.Triangulate(_cells);
         }
         
@@ -51,7 +51,11 @@ namespace _Scripts.Terrain
             position.y = 0f;
             position.z = z * (HexMetrics.OuterRadius * 1.5f);
 
-            HexCell cell = _cells[i] = Instantiate(cellPrefab);
+            GameObject go = Instantiate(cellPrefab.gameObject);
+            go.GetComponent<NetworkObject>().Spawn(true);
+            _cells[i] = new NetworkVariable<HexCell>(go.GetComponent<HexCell>(), NetworkVariableReadPermission.Everyone, NetworkVariableWritePermission.Owner);
+
+            HexCell cell = _cells[i].Value;
             cell.transform.SetParent(transform, false);
             cell.transform.localPosition = position;
             cell.coordinates = HexCoordinates.FromOffsetCoordinates(x, z);
@@ -59,41 +63,41 @@ namespace _Scripts.Terrain
 
             if (x > 0)
             {
-                cell.SetNeighbor(HexDirection.West, _cells[i - 1]);
+                cell.SetNeighbor(HexDirection.West, _cells[i - 1].Value);
             }
             if (z > 0)
             {
                 if ((z & 1) == 0) 
                 {
-                    cell.SetNeighbor(HexDirection.SouthEast, _cells[i - width]);
+                    cell.SetNeighbor(HexDirection.SouthEast, _cells[i - width].Value);
                     if (x > 0) 
                     {
-                        cell.SetNeighbor(HexDirection.SouthWest, _cells[i - width - 1]);
+                        cell.SetNeighbor(HexDirection.SouthWest, _cells[i - width - 1].Value);
                     }
                 }
                 else 
                 {
-                    cell.SetNeighbor(HexDirection.SouthWest, _cells[i - width]);
+                    cell.SetNeighbor(HexDirection.SouthWest, _cells[i - width].Value);
                     if (x < width - 1) 
                     {
-                        cell.SetNeighbor(HexDirection.SouthEast, _cells[i - width + 1]);
+                        cell.SetNeighbor(HexDirection.SouthEast, _cells[i - width + 1].Value);
                     }
                 }
             }
             
-            Text label = Instantiate(cellLabelPrefab);
-            label.rectTransform.SetParent(_gridCanvas.transform, false);
-            label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
-            label.text = cell.coordinates.ToStringOnSeparateLines();
+            //Text label = Instantiate(cellLabelPrefab);
+            //label.rectTransform.SetParent(_gridCanvas.transform, false);
+            //label.rectTransform.anchoredPosition = new Vector2(position.x, position.z);
+            //label.text = cell.coordinates.ToStringOnSeparateLines();
             
-            cell.uiRect = label.rectTransform;
+            //cell.uiRect = label.rectTransform;
         }
 
         public void ColorCell (Vector3 position, Color color) {
             position = transform.InverseTransformPoint(position);
             HexCoordinates coordinates = HexCoordinates.FromPosition(position);
             int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
-            HexCell cell = _cells[index];
+            HexCell cell = _cells[index].Value;
             cell.color = color;
             _hexMesh.Triangulate(_cells);
         }
@@ -103,7 +107,7 @@ namespace _Scripts.Terrain
             position = transform.InverseTransformPoint(position);
             HexCoordinates coordinates = HexCoordinates.FromPosition(position);
             int index = coordinates.X + coordinates.Z * width + coordinates.Z / 2;
-            return _cells[index];
+            return _cells[index].Value;
         }
         
         public void Refresh () 

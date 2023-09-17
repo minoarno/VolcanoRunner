@@ -55,8 +55,10 @@ public class NetworkPlayer : MonoBehaviour
 
         Physics.Raycast(ray, out hit, 100);
 
+        if (hit.collider == null) return true;
         var hitPlayer = hit.collider.gameObject.GetComponent<NetworkPlayer>();
-
+        if (hitPlayer == null) return true;
+        
         return hitPlayer?.PlayerId == PlayerId;
     }
 }

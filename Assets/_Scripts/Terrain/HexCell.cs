@@ -5,10 +5,10 @@ using UnityEngine.UIElements;
 
 namespace _Scripts.Terrain
 {
-    public class HexCell : MonoBehaviour, INetworkSerializable
+    public class HexCell : NetworkBehaviour, INetworkSerializable
     {
         public HexCoordinates coordinates;
-        public RectTransform uiRect;
+        //public RectTransform uiRect;
         
         public int Elevation 
         {
@@ -20,9 +20,9 @@ namespace _Scripts.Terrain
                 position.y = value * HexMetrics.ElevationStep;
                 transform.localPosition = position;
                 
-                Vector3 uiPosition = uiRect.localPosition;
-                uiPosition.z = _elevation * -HexMetrics.ElevationStep;
-                uiRect.localPosition = uiPosition;
+                //Vector3 uiPosition = uiRect.localPosition;
+                //uiPosition.z = _elevation * -HexMetrics.ElevationStep;
+                //uiRect.localPosition = uiPosition;
             }
         }
 	
