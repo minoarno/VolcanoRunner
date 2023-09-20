@@ -1,21 +1,33 @@
 using _Scripts.Core;
 using Unity.Netcode;
 using UnityEngine;
-using UnityEngine.UIElements;
 
 namespace _Scripts.Terrain
 {
-    public class HexCell : NetworkBehaviour, INetworkSerializable
+    public class HexCell : NetworkBehaviour
     {
-        public HexCoordinates coordinates;
+        public HexCoordinates Coordinates
+        {
+            get
+            {
+
+                return _coordinates.Value;
+            }
+            set
+            {
+                _coordinates.Value = value;
+                name = _coordinates.Value.ToString();
+            }
+        }
+        [SerializeField]private NetworkVariable<HexCoordinates> _coordinates = new();
         //public RectTransform uiRect;
         
         public int Elevation 
         {
-            get => _elevation;
+            get => _elevation.Value;
             set 
             {
-                _elevation = value;
+                _elevation.Value = value;
                 Vector3 position = transform.localPosition;
                 position.y = value * HexMetrics.ElevationStep;
                 transform.localPosition = position;
@@ -25,21 +37,33 @@ namespace _Scripts.Terrain
                 //uiRect.localPosition = uiPosition;
             }
         }
-	
-        private int _elevation;
-        public Color color;
 
-        [SerializeField] private HexCell[] neighbors;
-
-
-        public void NetworkSerialize<T>(BufferSerializer<T> serializer) where T : IReaderWriter
+        public override void OnNetworkSpawn()
         {
-            serializer.SerializeValue(ref neighbors);
-            serializer.SerializeValue(ref _elevation);
-            serializer.SerializeValue(ref color);
-            serializer.SerializeValue(ref coordinates);
+            name = _coordinates.Value.ToString();
         }
 
+        private NetworkVariable<int> _elevation = new();
+        private NetworkVariable<float> _colorR = new();
+        private NetworkVariable<float> _colorG = new();
+        private NetworkVariable<float> _colorB = new();
+
+        public Color Color
+        {
+            get
+            {
+                return new Color(_colorR.Value, _colorG.Value, _colorB.Value);
+            }
+            set
+            {
+                _colorR.Value = value.r;
+                _colorG.Value = value.g;
+                _colorB.Value = value.b;
+            }
+        }
+
+        [SerializeField] private HexCell[] neighbors;
+        
         public HexCell GetNeighbor (HexDirection direction) 
         {
             return neighbors[(int)direction];

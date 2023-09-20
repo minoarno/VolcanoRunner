@@ -35,7 +35,7 @@ namespace _Scripts.Terrain
 
         void EditCell (HexCell cell) 
         {
-            cell.color = _activeColor;
+            cell.Color = _activeColor;
             cell.Elevation = _activeElevation;
             hexGrid.Refresh();
         }

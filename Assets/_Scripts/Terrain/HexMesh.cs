@@ -26,7 +26,7 @@ namespace _Scripts.Terrain
             _triangles = new List<int>();
         }
 
-        public void Triangulate (NetworkVariable<HexCell>[] cells) 
+        public void Triangulate (HexCell[] cells) 
         {
             _hexMesh.Clear();
             _vertices.Clear();
@@ -35,7 +35,7 @@ namespace _Scripts.Terrain
             
             foreach (var cell in cells)
             {
-                Triangulate(cell.Value);
+                Triangulate(cell);
             }
             _hexMesh.vertices = _vertices.ToArray();
             _hexMesh.colors = _colors.ToArray();
@@ -59,7 +59,7 @@ namespace _Scripts.Terrain
             Vector3 v2 = center + HexMetrics.GetSecondSolidCorner(direction);
 
             AddTriangle(center, v1, v2);
-            AddTriangleColor(cell.color);
+            AddTriangleColor(cell.Color);
 
             //TriangulateConnection(direction, cell, v1, v2);
             if (direction <= HexDirection.SouthEast) TriangulateConnection(direction, cell, v1, v2);
@@ -82,7 +82,7 @@ namespace _Scripts.Terrain
             else
             {
                 AddQuad(v1, v2, v3, v4);
-                AddQuadColor(cell.color, neighbor.color);   
+                AddQuadColor(cell.Color, neighbor.Color);   
             }
 
             HexCell nextNeighbor = cell.GetNeighbor(direction.Next());
@@ -112,17 +112,17 @@ namespace _Scripts.Terrain
             }
             
             AddTriangle(v2, v4, v5);
-            AddTriangleColor(cell.color, neighbor.color, nextNeighbor.color);
+            AddTriangleColor(cell.Color, neighbor.Color, nextNeighbor.Color);
         }
         
         void TriangulateEdgeTerraces (Vector3 beginLeft, Vector3 beginRight, HexCell beginCell, Vector3 endLeft, Vector3 endRight, HexCell endCell) 
         {
             Vector3 v3 = HexMetrics.TerraceLerp(beginLeft, endLeft, 1);
             Vector3 v4 = HexMetrics.TerraceLerp(beginRight, endRight, 1);
-            Color c2 = HexMetrics.TerraceLerp(beginCell.color, endCell.color, 1);
+            Color c2 = HexMetrics.TerraceLerp(beginCell.Color, endCell.Color, 1);
             
             AddQuad(beginLeft, beginRight, v3, v4);
-            AddQuadColor(beginCell.color, c2);
+            AddQuadColor(beginCell.Color, c2);
             
             for (int i = 2; i < HexMetrics.TerraceSteps; i++) 
             {
@@ -131,13 +131,13 @@ namespace _Scripts.Terrain
                 Color c1 = c2;
                 v3 = HexMetrics.TerraceLerp(beginLeft, endLeft, i);
                 v4 = HexMetrics.TerraceLerp(beginRight, endRight, i);
-                c2 = HexMetrics.TerraceLerp(beginCell.color, endCell.color, i);
+                c2 = HexMetrics.TerraceLerp(beginCell.Color, endCell.Color, i);
                 AddQuad(v1, v2, v3, v4);
                 AddQuadColor(c1, c2);
             }
             
             AddQuad(v3, v4, endLeft, endRight);
-            AddQuadColor(c2, endCell.color);
+            AddQuadColor(c2, endCell.Color);
         }
         
         void TriangulateCorner (Vector3 bottom, HexCell bottomCell, Vector3 left, HexCell leftCell, Vector3 right, HexCell rightCell) 
@@ -185,7 +185,7 @@ namespace _Scripts.Terrain
             else
             {
                 AddTriangle(bottom, left, right);
-                AddTriangleColor(bottomCell.color, leftCell.color, rightCell.color);
+                AddTriangleColor(bottomCell.Color, leftCell.Color, rightCell.Color);
             }
         }
 
@@ -193,11 +193,11 @@ namespace _Scripts.Terrain
         {
             Vector3 v3 = HexMetrics.TerraceLerp(begin, left, 1);
             Vector3 v4 = HexMetrics.TerraceLerp(begin, right, 1);
-            Color c3 = HexMetrics.TerraceLerp(beginCell.color, leftCell.color, 1);
-            Color c4 = HexMetrics.TerraceLerp(beginCell.color, rightCell.color, 1);
+            Color c3 = HexMetrics.TerraceLerp(beginCell.Color, leftCell.Color, 1);
+            Color c4 = HexMetrics.TerraceLerp(beginCell.Color, rightCell.Color, 1);
 
             AddTriangle(begin, v3, v4);
-            AddTriangleColor(beginCell.color, c3, c4);
+            AddTriangleColor(beginCell.Color, c3, c4);
 
             for (int i = 2; i < HexMetrics.TerraceSteps; i++) 
             {
@@ -207,14 +207,14 @@ namespace _Scripts.Terrain
                 Color c2 = c4;
                 v3 = HexMetrics.TerraceLerp(begin, left, i);
                 v4 = HexMetrics.TerraceLerp(begin, right, i);
-                c3 = HexMetrics.TerraceLerp(beginCell.color, leftCell.color, i);
-                c4 = HexMetrics.TerraceLerp(beginCell.color, rightCell.color, i);
+                c3 = HexMetrics.TerraceLerp(beginCell.Color, leftCell.Color, i);
+                c4 = HexMetrics.TerraceLerp(beginCell.Color, rightCell.Color, i);
                 AddQuad(v1, v2, v3, v4);
                 AddQuadColor(c1, c2, c3, c4);
             }
             
             AddQuad(v3, v4, left, right);
-            AddQuadColor(c3, c4, leftCell.color, rightCell.color);
+            AddQuadColor(c3, c4, leftCell.Color, rightCell.Color);
         }
         
         void TriangulateCornerCliffTerraces (Vector3 begin, HexCell beginCell, Vector3 left, HexCell leftCell, Vector3 right, HexCell rightCell) 
@@ -223,7 +223,7 @@ namespace _Scripts.Terrain
             if (b < 0) b = -b;
             
             Vector3 boundary = Vector3.Lerp(begin, left, b);
-            Color boundaryColor = Color.Lerp(beginCell.color, leftCell.color, b);
+            Color boundaryColor = Color.Lerp(beginCell.Color, leftCell.Color, b);
 
             TriangulateBoundaryTriangle(
                 right, rightCell, begin, beginCell, boundary, boundaryColor
@@ -236,7 +236,7 @@ namespace _Scripts.Terrain
             }
             else {
                 AddTriangle(left, right, boundary);
-                AddTriangleColor(leftCell.color, rightCell.color, boundaryColor);
+                AddTriangleColor(leftCell.Color, rightCell.Color, boundaryColor);
             }
         }
         
@@ -246,7 +246,7 @@ namespace _Scripts.Terrain
             if (b < 0) b = -b;
             
             Vector3 boundary = Vector3.Lerp(begin, right, b);
-            Color boundaryColor = Color.Lerp(beginCell.color, rightCell.color, b);
+            Color boundaryColor = Color.Lerp(beginCell.Color, rightCell.Color, b);
             
             TriangulateBoundaryTriangle(begin, beginCell, left, leftCell, boundary, boundaryColor);
             
@@ -257,30 +257,30 @@ namespace _Scripts.Terrain
             else 
             {
                 AddTriangle(left, right, boundary);
-                AddTriangleColor(leftCell.color, rightCell.color, boundaryColor);
+                AddTriangleColor(leftCell.Color, rightCell.Color, boundaryColor);
             }
         }
 
         void TriangulateBoundaryTriangle (Vector3 begin, HexCell beginCell, Vector3 left, HexCell leftCell, Vector3 boundary, Color boundaryColor) 
         {
             Vector3 v2 = HexMetrics.TerraceLerp(begin, left, 1);
-            Color c2 = HexMetrics.TerraceLerp(beginCell.color, leftCell.color, 1);
+            Color c2 = HexMetrics.TerraceLerp(beginCell.Color, leftCell.Color, 1);
             
             AddTriangle(begin, v2, boundary);
-            AddTriangleColor(beginCell.color, c2, boundaryColor);
+            AddTriangleColor(beginCell.Color, c2, boundaryColor);
             
             for (int i = 2; i < HexMetrics.TerraceSteps; i++) 
             {
                 Vector3 v1 = v2;
                 Color c1 = c2;
                 v2 = HexMetrics.TerraceLerp(begin, left, i);
-                c2 = HexMetrics.TerraceLerp(beginCell.color, leftCell.color, i);
+                c2 = HexMetrics.TerraceLerp(beginCell.Color, leftCell.Color, i);
                 AddTriangle(v1, v2, boundary);
                 AddTriangleColor(c1, c2, boundaryColor);
             }
             
             AddTriangle(v2, left, boundary);
-            AddTriangleColor(c2, leftCell.color, boundaryColor);
+            AddTriangleColor(c2, leftCell.Color, boundaryColor);
         }
         
         void AddTriangleColor (Color c) 

@@ -330,7 +330,8 @@ MonoBehaviour:
     NetworkTransport: {fileID: 46109130}
     PlayerPrefab: {fileID: 8943213034664141980, guid: c1fd86b9a7d4e554f8a7ff734975c41f, type: 3}
     Prefabs:
-      NetworkPrefabsLists: []
+      NetworkPrefabsLists:
+      - {fileID: 11400000, guid: 9c6484952c36943449da6b4c35b9511c, type: 2}
     TickRate: 30
     ClientConnectionBufferTimeout: 10
     ConnectionApproval: 0
@@ -3815,8 +3816,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 528ebe0400ed6a14b964286949a35ceb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  width: 20
-  height: 20
+  width: 40
+  height: 40
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   touchedColor: {r: 1, g: 0, b: 1, a: 1}
   cellPrefab: {fileID: 5084800924750604356, guid: 5c74f29f46d88ca429a42e5f13d3d4aa, type: 3}
