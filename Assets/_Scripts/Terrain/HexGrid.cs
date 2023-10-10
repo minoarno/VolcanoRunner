@@ -22,8 +22,12 @@ namespace _Scripts.Terrain
         Canvas _gridCanvas;
         HexMesh _hexMesh;
         
+        public Texture2D noiseSource;
+
         void Awake () 
         {
+            HexMetrics.noiseSource = noiseSource;
+        
             _gridCanvas = GetComponentInChildren<Canvas>();
             _hexMesh = GetComponentInChildren<HexMesh>();
 
@@ -86,6 +90,7 @@ namespace _Scripts.Terrain
             label.text = cell.coordinates.ToStringOnSeparateLines();
             
             cell.uiRect = label.rectTransform;
+            cell.Elevation = 0;
         }
 
         public void ColorCell (Vector3 position, Color color) {
@@ -108,6 +113,11 @@ namespace _Scripts.Terrain
         public void Refresh () 
         {
             _hexMesh.Triangulate(_cells);
+        }
+        
+        void OnEnable () 
+        {
+            HexMetrics.noiseSource = noiseSource;
         }
     }
 }

@@ -299,9 +299,9 @@ namespace _Scripts.Terrain
         private void AddTriangle (Vector3 v1, Vector3 v2, Vector3 v3)
         {
             int vertexIndex = _vertices.Count;
-            _vertices.Add(v1);
-            _vertices.Add(v2);
-            _vertices.Add(v3);
+            _vertices.Add(Perturb(v1));
+            _vertices.Add(Perturb(v2));
+            _vertices.Add(Perturb(v3));
             _triangles.Add(vertexIndex);
             _triangles.Add(vertexIndex + 1);
             _triangles.Add(vertexIndex + 2);
@@ -310,10 +310,10 @@ namespace _Scripts.Terrain
         void AddQuad (Vector3 v1, Vector3 v2, Vector3 v3, Vector3 v4) 
         {
             int vertexIndex = _vertices.Count;
-            _vertices.Add(v1);
-            _vertices.Add(v2);
-            _vertices.Add(v3);
-            _vertices.Add(v4);
+            _vertices.Add(Perturb(v1));
+            _vertices.Add(Perturb(v2));
+            _vertices.Add(Perturb(v3));
+            _vertices.Add(Perturb(v4));
             _triangles.Add(vertexIndex);
             _triangles.Add(vertexIndex + 2);
             _triangles.Add(vertexIndex + 1);
@@ -336,6 +336,14 @@ namespace _Scripts.Terrain
             _colors.Add(c1);
             _colors.Add(c2);
             _colors.Add(c2);
+        }
+        
+        Vector3 Perturb (Vector3 position) 
+        {
+            Vector4 sample = HexMetrics.SampleNoise(position);
+            position.x += (sample.x * 2f - 1f) * HexMetrics.cellPerturbStrength;
+            position.z += (sample.z * 2f - 1f) * HexMetrics.cellPerturbStrength;
+            return position;
         }
     }
 }
