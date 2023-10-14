@@ -25,6 +25,14 @@ namespace _Scripts.Terrain
             }
         }
 	
+        public Vector3 Position 
+        {
+            get 
+            {
+                return transform.localPosition;
+            }
+        }
+        
         private int _elevation;
         public Color color;
 
